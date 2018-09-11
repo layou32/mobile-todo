@@ -55,7 +55,7 @@ public class TodoAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return listTodos.get(position).getTodoId();
+        return Integer.parseInt(listTodos.get(position).getTodoId());
     }
 
     @Override

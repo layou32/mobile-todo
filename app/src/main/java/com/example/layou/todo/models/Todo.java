@@ -1,19 +1,25 @@
 package com.example.layou.todo.models;
 
-public class Todo {
-    public int TodoId;
-    public String TodoDescription;
+import com.google.firebase.database.IgnoreExtraProperties;
 
-    public Todo(int TodoId, String TodoDescription) {
-        this.TodoId = TodoId;
-        this.TodoDescription = TodoDescription;
+@IgnoreExtraProperties
+public class Todo {
+    public String todoId;
+    public String todoDescription;
+
+    public Todo() {
     }
 
-    public int getTodoId() {
-        return TodoId;
+    public Todo(String todoId, String todoDescription) {
+        this.todoId = todoId;
+        this.todoDescription = todoDescription;
+    }
+
+    public String getTodoId() {
+        return todoId;
     }
 
     public String getTodoDescription() {
-        return TodoDescription;
+        return todoDescription;
     }
 }
