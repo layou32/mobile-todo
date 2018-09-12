@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -24,7 +25,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements TodoAdapter.OnSelectedTodo{
+public class MainActivity
+        extends AppCompatActivity
+        implements TodoAdapter.OnSelectedTodo, TodoAdapter.OnDoneTodo{
+
     private EditText inputTodoDescription;
     private ImageButton btnSaveTodo;
     private ListView todoList;
@@ -37,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements TodoAdapter.OnSel
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         listTodo = new ArrayList<>();
         dataBaseTodo = FirebaseDatabase.getInstance().getReference("todos");
@@ -50,6 +55,10 @@ public class MainActivity extends AppCompatActivity implements TodoAdapter.OnSel
                 final boolean todoIsSelected = selectedTodo != null;
 
                 if (todoIsSelected) {
+                    updateTodo(
+                        selectedTodo.getTodoId(),
+                        inputTodoDescription.getText().toString().trim()
+                    );
                 } else {
                     addTodo();
                 }
@@ -90,6 +99,12 @@ public class MainActivity extends AppCompatActivity implements TodoAdapter.OnSel
         inputTodoDescription.setText(selectedTodo.getTodoDescription());
     }
 
+    @Override
+    public void onDondeTodo(Todo todo) {
+        deleteTodo(todo.getTodoId());
+        inputTodoDescription.setText("");
+    }
+
     private void addTodo() {
         String todoDescription = inputTodoDescription.getText().toString().trim();
         boolean isEmpty = TextUtils.isEmpty(todoDescription);
@@ -104,9 +119,60 @@ public class MainActivity extends AppCompatActivity implements TodoAdapter.OnSel
 
             inputTodoDescription.setText("");
 
-            Toast.makeText(this, "Todo added", Toast.LENGTH_SHORT).show();
+            Toast.makeText(
+                this,
+                "Todo added",
+                Toast.LENGTH_SHORT
+            ).show();
         } else {
-            Toast.makeText(this, "Please enter a description for the todo", Toast.LENGTH_LONG).show();
+            Toast.makeText(
+                this,
+                "Please enter a description for the todo",
+                Toast.LENGTH_LONG
+            ).show();
         }
     }
+
+    private boolean updateTodo(String id, String newDescription) {
+        boolean isEmpty = TextUtils.isEmpty(newDescription);
+        inputTodoDescription.setText("");
+        selectedTodo = null;
+        if (!isEmpty) {
+            DatabaseReference databaseReference =
+                    FirebaseDatabase.getInstance().getReference("todos").child(id);
+
+            Todo todo = new Todo(id, newDescription);
+            databaseReference.setValue(todo);
+
+            Toast.makeText(
+                getApplicationContext(),
+                "Todo Updated",
+                Toast.LENGTH_SHORT
+            ).show();
+
+            return true;
+        } else {
+            Toast.makeText(
+                this,
+                "No found description for the Todo",
+                Toast.LENGTH_LONG
+            ).show();
+            return false;
+        }
+    }
+
+    private boolean deleteTodo(String id) {
+        DatabaseReference databaseReference =
+                FirebaseDatabase.getInstance().getReference("todos").child(id);
+        databaseReference.removeValue();
+
+        Toast.makeText(
+            getApplicationContext(),
+            "Todo Deleted",
+            Toast.LENGTH_SHORT
+        ).show();
+
+        return true;
+    }
+
 }

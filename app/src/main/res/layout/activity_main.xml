@@ -6,35 +6,39 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:padding="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <EditText
             android:id="@+id/input_description"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="50dp"
             android:layout_weight="0.80"
-            android:layout_gravity="left"/>
+            android:layout_gravity="left"
+            android:inputType="textCapWords"
+            android:maxLength="50"/>
 
         <ImageButton
             android:id="@+id/btn_save"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_weight="0.20"
             android:src="@drawable/ic_save_black"
             android:layout_gravity="right"
-            android:adjustViewBounds="true"
             android:background="@color/colorPrimary"
             android:tint="@color/colorWhite"/>
+
     </LinearLayout>
 
     <LinearLayout
+        android:padding="20dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="5dp">
+        android:layout_height="match_parent">
         <ListView
             android:id="@+id/list_todo"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
     </LinearLayout>
 
 </LinearLayout>

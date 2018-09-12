@@ -19,18 +19,25 @@ import java.util.List;
 public class TodoAdapter extends BaseAdapter {
     private List<Todo> listTodos = new ArrayList<>();
     private Todo selectedTodo;
+    private Todo doneTodo;
     private Context context;
     private LayoutInflater inflater;
-    OnSelectedTodo oCallback;
+    OnSelectedTodo cbckSelectedTodo;
+    OnDoneTodo cbckDoneTodo;
 
     public TodoAdapter(Context context, Activity activity) {
         this.context = context;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        oCallback = (OnSelectedTodo) activity;
+        cbckSelectedTodo = (OnSelectedTodo) activity;
+        cbckDoneTodo = (OnDoneTodo) activity;
     }
 
     public interface OnSelectedTodo {
         public void onSelectedTodo(Todo todo);
+    }
+
+    public interface OnDoneTodo {
+        public void onDondeTodo(Todo todo);
     }
 
     public void addItem(final Todo item) {
@@ -55,7 +62,7 @@ public class TodoAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return Integer.parseInt(listTodos.get(position).getTodoId());
+        return position;
     }
 
     @Override
@@ -70,17 +77,18 @@ public class TodoAdapter extends BaseAdapter {
             holder.itemDescription = (TextView) view.findViewById(R.id.task_title);
             holder.doneButton = (Button) view.findViewById(R.id.task_delete);
 
-            holder.itemDescription.setText(todo.getTodoDescription());
-
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
 
+        holder.itemDescription.setText(todo.getTodoDescription());
+
         holder.doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, todo.getTodoDescription(), Toast.LENGTH_LONG).show();
+                doneTodo = listTodos.get(position);
+                cbckDoneTodo.onDondeTodo(doneTodo);
             }
         });
 
@@ -88,7 +96,7 @@ public class TodoAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 selectedTodo = listTodos.get(position);
-                oCallback.onSelectedTodo(getItem(position));
+                cbckSelectedTodo.onSelectedTodo(getItem(position));
             }
         });
 
