@@ -6,4 +6,6 @@
     <color name="colorBlack">#000000</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorSuccess">#388e3c</color>
+    <color name="colorDone">#1ebc26</color>
+    <color name="colorSave">#4083ff</color>
 </resources>

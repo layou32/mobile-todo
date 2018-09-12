@@ -31,6 +31,7 @@ public class MainActivity
 
     private EditText inputTodoDescription;
     private ImageButton btnSaveTodo;
+    private Button btnCleanTodo;
     private ListView todoList;
     private TodoAdapter todoAdapter;
     private List<Todo> listTodo;
@@ -48,6 +49,15 @@ public class MainActivity
         todoList = (ListView) findViewById(R.id.list_todo);
         inputTodoDescription = (EditText) findViewById(R.id.input_description);
         btnSaveTodo = (ImageButton) findViewById(R.id.btn_save);
+        btnCleanTodo = (Button) findViewById(R.id.btn_clear_description);
+
+        btnCleanTodo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectedTodo = null;
+                inputTodoDescription.setText("");
+            }
+        });
 
         btnSaveTodo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,7 +74,6 @@ public class MainActivity
                 }
             }
         });
-
     }
 
     @Override
